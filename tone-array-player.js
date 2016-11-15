@@ -25,7 +25,7 @@ function fillPart(data) {
 		var vel = Math.random() / 3 * 2 + 0.3;
 		var dur = "16n";
 		//console.log([time, pitch, dur, vel, pos]);
-	  part.add(time, [pitch, dur, vel]);
+	  if (pitch <> 0) part.add(time, [pitch, dur, vel]);
 	  pos += 2;
 	  posB = Math.floor(pos/16);
 	  posQ = Math.floor(pos/4)%4;
@@ -37,7 +37,7 @@ function genImprov() {
 	// generate an imporvisation
 	console.log("composing...");
 	for (var i=0; i<headPitches.length; i++) {
-		improvPitches[i] = headPitches[i] + Math.round(Math.random() * 4 - 2);
+		if (pitch <> 0) improvPitches[i] = headPitches[i] + Math.round(Math.random() * 4 - 2);
 	}
 }
 // use JS timer to replay the part after a specified interval (not an immediate loop!)
