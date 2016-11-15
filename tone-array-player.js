@@ -4,8 +4,8 @@ var part = new Tone.Part(function (time, noteData){
 	synth.triggerAttackRelease(noteData[0], noteData[1], time, noteData[2]);
 }, []);
 
-var headPitches = [60, 61, 62, 63, 61, 62, 63, 64, 62, 63, 64, 65, 63, 64, 65, 66];
-var improvPitches = [60, 61, 62, 63, 61, 62, 63, 64, 62, 63, 64, 65, 63, 64, 65, 66];
+var headPitches = [72, 0, 0, 71, 69, 0, 67, 65, 0, 67, 0, 0, 69, 0, 72, 0, 71, 0, 0, 69, 67, 0, 65, 64, 0, 0, 0, 0, 0, 0, 0, 0];
+var improvPitches = headPitches;
 
 // generator
 //var rhythms = [2, 4]; // in 16th note resolution, i.e., 4 = quater note, 16 = whole note
@@ -45,9 +45,9 @@ function looper(i) {
 	console.log(i);
 	fillPart(improvPitches);
 	part.start();
-	setTimeout(function(){part.stop()}, 3990);
-	setTimeout(function(){genImprov()}, 3900);
-	if (i < 3) setTimeout(function(){looper(i + 1)}, 4000);
+	setTimeout(function(){part.stop()}, 7990);
+	setTimeout(function(){genImprov()}, 7900);
+	if (i < 3) setTimeout(function(){looper(i + 1)}, 8000);
 }
 
 Tone.Transport.bpm.value = 120;
