@@ -9,10 +9,6 @@ var improvPitches = [72, 0, 0, 71, 69, 0, 67, 65, 0, 67, 0, 0, 69, 0, 72, 0, 71,
 
 var chords = [[9, 0, 4, 7], [2, 5, 9, 0], [7, 10, 2, 4], [0, 4, 7]]; // per measure
 
-// generator
-//var rhythms = [2, 4]; // in 16th note resolution, i.e., 4 = quater note, 16 = whole note
-//var durations = [32]; // as beat subdivisions, i.e, 4 = quater note, 16 = 16th note
-
 function fillPart(data) {
 	var pos = 0;
 	var posB = 0;
@@ -56,17 +52,14 @@ function genImprov() {
 		if (headPitches[i] > 0) {
 			improvPitches[i] = quantize(headPitches[i] + Math.round(Math.random() * 4 - 2), pitchSet);
 		}
-		//console.log(chords[Math.floor(i / 8)]);
 	}
 }
-// use JS timer to replay the part after a specified interval (not an immediate loop!)
+// use JS timer to replay the part after a specified interval (may not be an immediate loop!)
 function looper(i) {
 	console.log(i);
-	if (i%2 === 0) {
+	if (i%2 === 0) { // alternate between original and improvised versions
 		fillPart(headPitches);
 	} else fillPart(improvPitches);
-  //console.log(headPitches);
-	//console.log(improvPitches);
 	part.start();
 	setTimeout(function(){part.stop()}, 7990);
 	if (i < 3) {
@@ -81,8 +74,6 @@ function quantize (val, scale) {
 	}
 	return val;
 }
-
-//console.log(quantize(10, [0, 2, 4, 5, 7, 11]));
 
 Tone.Transport.bpm.value = 120;
 Tone.Transport.timeSignature = [4, 4];
