@@ -4,10 +4,22 @@ var part = new Tone.Part(function (time, noteData){
 	synth.triggerAttackRelease(noteData[0], noteData[1], time, noteData[2]);
 }, []);
 
+var head = [
+	{onset: 0, pitch: 72, dur: 3},
+	{onset: 4, pitch: 71, dur: 3},
+// etc.
+];
+
+head[0].pitch;
+
 var headPitches = [72, 0, 0, 71, 69, 0, 67, 65, 0, 67, 0, 0, 69, 0, 72, 0, 71, 0, 0, 69, 67, 0, 65, 64, 0, 0, 0, 0, 0, 0, 0, 0];
+var headDurations = [];
 var improvPitches = [72, 0, 0, 71, 69, 0, 67, 65, 0, 67, 0, 0, 69, 0, 72, 0, 71, 0, 0, 69, 67, 0, 65, 64, 0, 0, 0, 0, 0, 0, 0, 0];
 
-var chords = [[9, 0, 4, 7], [2, 5, 9, 0], [7, 10, 2, 4], [0, 4, 7]]; // per measure
+var chords = [[9, 0, 4, 7], [9, 0, 4, 7], [9, 0, 4, 7], [9, 0, 4, 7],
+		[2, 5, 9, 0], [2, 5, 9, 0], [2, 5, 9, 0], [2, 5, 9, 0],
+		[7, 10, 2, 4], [7, 10, 2, 4], [7, 10, 2, 4], [0, 4, 7, 10],
+		[0, 4, 7, 10], [0, 4, 7, 10], [0, 4, 7, 11], [0, 4, 7, 11]]; // per beat
 
 function fillPart(data) {
 	var pos = 0;
@@ -45,9 +57,9 @@ function genImprov() {
 	// generate an imporvisation
 	console.log("composing...");
 	for (var i=0; i<headPitches.length; i++) {
-		var pitchSet = [0, 2, 4, 5, 7, 9, 11];
-		if (i%4 === 0) {
-			chords[Math.floor(i / 8)];
+		var pitchSet = [0, 2, 4, 7, 9];
+		if (i%2 === 0) {
+			pitchSet = chords[Math.floor(i / 2)];
 		}
 		if (headPitches[i] > 0) {
 			improvPitches[i] = quantize(headPitches[i] + Math.round(Math.random() * 4 - 2), pitchSet);
@@ -55,18 +67,6 @@ function genImprov() {
 	}
 }
 // use JS timer to replay the part after a specified interval (may not be an immediate loop!)
-function looper(i) {
-	console.log(i);
-	if (i%2 === 0) { // alternate between original and improvised versions
-		fillPart(headPitches);
-	} else fillPart(improvPitches);
-	part.start();
-	setTimeout(function(){part.stop()}, 7990);
-	if (i < 3) {
-		setTimeout(function(){genImprov()}, 7900);
-		setTimeout(function(){looper(i + 1)}, 8000);
-	}
-}
 
 function quantize (val, scale) {
 	while (scale.indexOf(val%12) === -1) {
@@ -78,6 +78,34 @@ function quantize (val, scale) {
 Tone.Transport.bpm.value = 120;
 Tone.Transport.timeSignature = [4, 4];
 Tone.Transport.swing = 0.5;
+// Tone.Transport.loop = true;
+// Tone.Transport.loopStart = 0;
+// Tone.Transport.loopEnd = "4:0:0";
 Tone.Transport.start();
+part.loop = true;
+part.loopStart = 0;
+part.loopEnd = "4:0:0";
 
-looper(0);
+var firstTime = true;
+var isImprov = true;
+
+Tone.Transport.scheduleRepeat(function () {
+	if (isImprov) { // alternate between original and improvised versions
+		fillPart(headPitches);
+		isImprov = false;
+	} else {
+		genImprov();
+		fillPart(improvPitches);
+		isImprov = true;
+	}
+	console.log(Tone.Transport.position);
+	if (firstTime) {
+		setTimeout(function(){part.start()}, 1);
+		firstTime = false;
+	}
+}, "4m");
+
+
+//setTimeout(function(){part.start()}, 100);
+
+//looper(0);
