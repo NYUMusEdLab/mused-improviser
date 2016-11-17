@@ -10,6 +10,18 @@ var head = [
 // etc.
 ];
 
+var improv = [
+	{onset: 0, pitch: 72, dur: 3},
+	{onset: 4, pitch: 71, dur: 3},
+// etc.
+];
+
+var perf = [
+	{onset: 0, pitch: 72, dur: 3},
+	{onset: 4, pitch: 71, dur: 3},
+// etc.
+];
+
 head[0].pitch;
 
 var headPitches = [72, 0, 0, 71, 69, 0, 67, 65, 0, 67, 0, 0, 69, 0, 72, 0, 71, 0, 0, 69, 67, 0, 65, 64, 0, 0, 0, 0, 0, 0, 0, 0];
