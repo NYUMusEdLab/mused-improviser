@@ -20,6 +20,7 @@ var headData = [
 	{onset: 23, pitch: 64, dur: 9}
 ];
 
+// test data
 // var headData = [
 // 	{onset: 0, pitch: 60, dur: 1},
 // 	{onset: 1, pitch: 62, dur: 1},
@@ -102,7 +103,7 @@ function genImprov() {
 				dur2 = dur1;
 				onset2 = headData[i].onset + (headData[i + 1].onset - headData[i].onset) / 2;
 		}
-		// calulate the next pitch
+		// calculate the next pitch
 		var pitchSet = [];
 		if (i%2 === 0) {
 			pitchSet = chords[Math.floor(i / 2)];
@@ -111,7 +112,7 @@ function genImprov() {
 		}
 		var newPitch = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
 		// add note(s) - perhaps leave one out from time to time
-		if (headData[i].onset % 4 === 0 || headData[i].dur > 3 || Math.random() < 0.5) {
+		if (headData[i].onset % 4 === 0 || headData[i].dur > 3 || Math.random() < 0.2) {
 			improvData.push({onset: headData[i].onset, pitch: newPitch, dur: dur1});
 		}
 		if (divide) {
