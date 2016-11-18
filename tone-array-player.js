@@ -20,6 +20,25 @@ var headData = [
 	{onset: 23, pitch: 64, dur: 9}
 ];
 
+// var headData = [
+// 	{onset: 0, pitch: 60, dur: 1},
+// 	{onset: 1, pitch: 62, dur: 1},
+// 	{onset: 2, pitch: 60, dur: 1},
+// 	{onset: 3, pitch: 62, dur: 1},
+// 	{onset: 4, pitch: 60, dur: 1},
+// 	{onset: 5, pitch: 62, dur: 1},
+// 	{onset: 6, pitch: 60, dur: 1},
+// 	{onset: 7, pitch: 62, dur: 1},
+// 	{onset: 8, pitch: 60, dur: 1},
+// 	{onset: 9, pitch: 62, dur: 1},
+// 	{onset: 10, pitch: 60, dur: 1},
+// 	{onset: 11, pitch: 62, dur: 1},
+// 	{onset: 12, pitch: 60, dur: 1},
+// 	{onset: 13, pitch: 62, dur: 1},
+// 	{onset: 14, pitch: 60, dur: 1},
+// 	{onset: 15, pitch: 62, dur: 1}
+// ];
+
 var improvData = [
 	{onset: 0, pitch: 72, dur: 3},
 	{onset: 3, pitch: 71, dur: 1},
@@ -35,19 +54,6 @@ var improvData = [
 	{onset: 22, pitch: 65, dur: 1},
 	{onset: 23, pitch: 64, dur: 9}
 ];
-
-//var headPitches = [72, 0, 0, 71, 69, 0, 67, 65, 0, 67, 0, 0, 69, 0, 72, 0, 71, 0, 0, 69, 67, 0, 65, 64, 0, 0, 0, 0, 0, 0, 0, 0];
-
-
-var perfData = [
-	{onset: 0, pitch: 72, dur: 3},
-	{onset: 4, pitch: 71, dur: 3},
-// etc.
-];
-
-//var headPitches = [72, 0, 0, 71, 69, 0, 67, 65, 0, 67, 0, 0, 69, 0, 72, 0, 71, 0, 0, 69, 67, 0, 65, 64, 0, 0, 0, 0, 0, 0, 0, 0];
-//var headDurations = [];
-//var improvPitches = [72, 0, 0, 71, 69, 0, 67, 65, 0, 67, 0, 0, 69, 0, 72, 0, 71, 0, 0, 69, 67, 0, 65, 64, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var chords = [[9, 0, 4, 7], [9, 0, 4, 7], [9, 0, 4, 7], [9, 0, 4, 7],
 		[2, 5, 9, 0], [2, 5, 9, 0], [2, 5, 9, 0], [2, 5, 9, 0],
@@ -82,25 +88,25 @@ function convertDur(len) {
 function genImprov() {
 	//generate an improvisation
 	console.log("composing...");
+	improvData = []; // start empty
 	for (var i=0; i<headData.length; i++) {
-		if (i < (headData.length - 1) && (headData[i].onset < 32) &&
-			((headData[i + 1].onset - headData[i].onset)%2 === 0) && (Math.random() < 0.99)) {
-				console.log("half");
-				improvData.push([headData[i].onset + ((headData[i + 1].onset - headData[i].onset) / 2),
-					[headData[i].pitch, convertDur(headData[i].dur / 2, 0.5)]]);
-				//part.add(data[i].onset + ((data[i + 1].onset - data[i].onset) / 2),
+		// if (i < (headData.length - 1) && (headData[i].onset < 32) &&
+		// 	((headData[i + 1].onset - headData[i].onset)%2 === 0) && (Math.random() < 0.99)) {
+		// 		console.log("half");
+		// 		improvData.push([headData[i].onset + ((headData[i + 1].onset - headData[i].onset) / 2),
+		// 			[headData[i].pitch, convertDur(headData[i].dur / 2, 0.5)]]);
+		// 		//part.add(data[i].onset + ((data[i + 1].onset - data[i].onset) / 2),
 		 		//	[pitch, convertDur(len  / 2), Math.random() / 3 * 2 + 0.3]);
 		 	//len = len / 2;
-		}
+		//}
 		var pitchSet = [];
 		if (i%2 === 0) {
 			pitchSet = chords[Math.floor(i / 2)];
 		} else {
 			pitchSet = pitchSet.concat([0, 2, 4, 7, 9]);
 		}
-		if (headData[i].pitch > 0) {
-			improvData[i].pitch = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
-		}
+		var newPitch = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
+		improvData.push({onset: headData[i].onset, pitch: newPitch, dur: headData[i].dur});
 	}
 }
 // adjust pitch to match one of the supplied pitch classes
