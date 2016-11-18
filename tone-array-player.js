@@ -46,7 +46,7 @@ var perfData = [];
 var chords = [[9, 0, 4, 7], [9, 0, 4, 7], [9, 0, 4, 7], [9, 0, 4, 7],
 		[2, 5, 9, 0], [2, 5, 9, 0], [2, 5, 9, 0], [2, 5, 9, 0],
 		[7, 10, 2, 4], [7, 10, 2, 4], [7, 10, 2, 4], [0, 4, 7, 10],
-		[0, 4, 7, 10], [0, 4, 7, 10], [0, 4, 7, 11], [0, 4, 7, 11]]; // per beat
+		[0, 4, 7, 10], [0, 4, 7, 10], [0, 4, 7, 11], [0, 4, 7, 11]]; // changes per beat
 
 function fillPart(data) {
 	part.removeAll();
@@ -84,7 +84,7 @@ function genImprov() {
 		var onset2 = 0;
 		if (i < (headData.length - 1) && (headData[i].onset < 32) &&
 		 	((headData[i + 1].onset - headData[i].onset)%2 === 0) && (Math.random() < 0.5)) {
-		 		console.log("half", i);
+		 		console.log("dividing", i);
 				divide = true;
 				dur1 = dur1 / 2;
 				dur2 = dur1;
@@ -98,8 +98,12 @@ function genImprov() {
 			pitchSet = pitchSet.concat([0, 2, 4, 7, 9]);
 		}
 		var newPitch = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
+		if (improvData.length > 0 && improvData[i - 1].pitch === newPitch) { // avoid some duplicates
+			console.log("duplicate pitch", i);
+			newPitch = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
+		}
 		// add note(s) - perhaps leave one out from time to time
-		if (headData[i].onset % 4 === 0 || headData[i].dur > 3 || Math.random() < 0.2) {
+		if (headData[i].onset % 4 === 0 || headData[i].dur > 3 || Math.random() < 0.8) {
 			improvData.push({onset: headData[i].onset, pitch: newPitch, dur: dur1});
 		}
 		if (divide) {
