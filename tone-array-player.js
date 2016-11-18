@@ -68,8 +68,7 @@ function fillPart(data) {
 		var pitch = Tone.Frequency(data[i].pitch, "midi").eval();
 		var vel = Math.random() / 3 * 2 + 0.3;
 		var len = data[i].dur;
-		// divide?
-		console.log(i);
+		//console.log(i);
 		// //console.log([time, pitch, dur, vel, pos]);
 	  part.add(time, [pitch, convertDur(len), vel]);
 	}
@@ -90,15 +89,20 @@ function genImprov() {
 	console.log("composing...");
 	improvData = []; // start empty
 	for (var i=0; i<headData.length; i++) {
-		// if (i < (headData.length - 1) && (headData[i].onset < 32) &&
-		// 	((headData[i + 1].onset - headData[i].onset)%2 === 0) && (Math.random() < 0.99)) {
-		// 		console.log("half");
-		// 		improvData.push([headData[i].onset + ((headData[i + 1].onset - headData[i].onset) / 2),
-		// 			[headData[i].pitch, convertDur(headData[i].dur / 2, 0.5)]]);
-		// 		//part.add(data[i].onset + ((data[i + 1].onset - data[i].onset) / 2),
-		 		//	[pitch, convertDur(len  / 2), Math.random() / 3 * 2 + 0.3]);
-		 	//len = len / 2;
-		//}
+		// decide to insert notes by dividing 1 into 2?
+		var divide = false;
+		var dur1 = headData[i].dur;
+		var dur2 = 0;
+		var onset2 = 0;
+		if (i < (headData.length - 1) && (headData[i].onset < 32) &&
+		 	((headData[i + 1].onset - headData[i].onset)%2 === 0) && (Math.random() < 0.5)) {
+		 		console.log("half", i);
+				divide = true;
+				dur1 = dur1 / 2;
+				dur2 = dur1;
+				onset2 = headData[i].onset + (headData[i + 1].onset - headData[i].onset) / 2;
+		}
+		// calulate the next pitch
 		var pitchSet = [];
 		if (i%2 === 0) {
 			pitchSet = chords[Math.floor(i / 2)];
@@ -106,7 +110,14 @@ function genImprov() {
 			pitchSet = pitchSet.concat([0, 2, 4, 7, 9]);
 		}
 		var newPitch = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
-		improvData.push({onset: headData[i].onset, pitch: newPitch, dur: headData[i].dur});
+		// add note(s) - perhaps leave one out from time to time
+		if (headData[i].onset % 4 === 0 || headData[i].dur > 3 || Math.random() < 0.5) {
+			improvData.push({onset: headData[i].onset, pitch: newPitch, dur: dur1});
+		}
+		if (divide) {
+			var newPitch2 = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
+			improvData.push({onset: onset2, pitch: newPitch2, dur: dur2});
+		}
 	}
 }
 // adjust pitch to match one of the supplied pitch classes
@@ -119,7 +130,7 @@ function quantize (val, scale) {
 
 Tone.Transport.bpm.value = 124;
 Tone.Transport.timeSignature = [4, 4];
-Tone.Transport.swing = 0.0;
+Tone.Transport.swing = 0.6;
 Tone.Transport.start();
 part.loop = true;
 part.loopStart = 0;
