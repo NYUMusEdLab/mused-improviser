@@ -40,21 +40,8 @@ var headData = [
 // 	{onset: 15, pitch: 62, dur: 1}
 // ];
 
-var improvData = [
-	{onset: 0, pitch: 72, dur: 3},
-	{onset: 3, pitch: 71, dur: 1},
-	{onset: 4, pitch: 69, dur: 2},
-	{onset: 6, pitch: 67, dur: 1},
-	{onset: 7, pitch: 65, dur: 2},
-	{onset: 9, pitch: 67, dur: 3},
-	{onset: 12, pitch: 69, dur: 2},
-	{onset: 14, pitch: 72, dur: 2},
-	{onset: 16, pitch: 71, dur: 3},
-	{onset: 19, pitch: 69, dur: 1},
-	{onset: 20, pitch: 67, dur: 2},
-	{onset: 22, pitch: 65, dur: 1},
-	{onset: 23, pitch: 64, dur: 9}
-];
+var improvData = [];
+var perfData = [];
 
 var chords = [[9, 0, 4, 7], [9, 0, 4, 7], [9, 0, 4, 7], [9, 0, 4, 7],
 		[2, 5, 9, 0], [2, 5, 9, 0], [2, 5, 9, 0], [2, 5, 9, 0],
