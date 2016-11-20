@@ -37,7 +37,23 @@ var headData = [
 // 	{onset: 12, pitch: 60, dur: 1},
 // 	{onset: 13, pitch: 62, dur: 1},
 // 	{onset: 14, pitch: 60, dur: 1},
-// 	{onset: 15, pitch: 62, dur: 1}
+// 	{onset: 15, pitch: 62, dur: 1},
+// 	{onset: 16, pitch: 60, dur: 1},
+// 	{onset: 17, pitch: 62, dur: 1},
+// 	{onset: 18, pitch: 60, dur: 1},
+// 	{onset: 19, pitch: 62, dur: 1},
+// 	{onset: 20, pitch: 60, dur: 1},
+// 	{onset: 21, pitch: 62, dur: 1},
+// 	{onset: 22, pitch: 60, dur: 1},
+// 	{onset: 23, pitch: 62, dur: 1},
+// 	{onset: 24, pitch: 60, dur: 1},
+// 	{onset: 25, pitch: 62, dur: 1},
+// 	{onset: 26, pitch: 60, dur: 1},
+// 	{onset: 27, pitch: 62, dur: 1},
+// 	{onset: 28, pitch: 60, dur: 1},
+// 	{onset: 29, pitch: 62, dur: 1},
+// 	{onset: 30, pitch: 60, dur: 1},
+// 	{onset: 31, pitch: 62, dur: 1},
 // ];
 
 var improvData = [];
@@ -64,7 +80,7 @@ function fillPart(data) {
 
 function convertDur(len) {
 	var dur = "16n";
-	if (len === 1) dur = "16n";
+	//if (len === 1) dur = "16n";
 	if (len === 2) dur = "8n";
 	if (len === 3) dur = "6n";
 	if (len >= 4 && len <= 7) dur = "4n";
@@ -76,6 +92,7 @@ function genImprov() {
 	//generate an improvisation
 	console.log("composing...");
 	improvData = []; // start empty
+	var improvIndex = 0;
 	for (var i=0; i<headData.length; i++) {
 		// decide to insert notes by dividing 1 into 2?
 		var divide = false;
@@ -98,17 +115,19 @@ function genImprov() {
 			pitchSet = pitchSet.concat([0, 2, 4, 7, 9]);
 		}
 		var newPitch = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
-		if (improvData.length > 0 && improvData[i - 1].pitch === newPitch) { // avoid some duplicates
+		if (improvData.length > 0 && improvData[improvIndex - 1].pitch === newPitch) { // avoid some duplicates
 			console.log("duplicate pitch", i);
 			newPitch = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
 		}
 		// add note(s) - perhaps leave one out from time to time
 		if (headData[i].onset % 4 === 0 || headData[i].dur > 3 || Math.random() < 0.8) {
 			improvData.push({onset: headData[i].onset, pitch: newPitch, dur: dur1});
+			improvIndex += 1;
 		}
 		if (divide) {
 			var newPitch2 = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
 			improvData.push({onset: onset2, pitch: newPitch2, dur: dur2});
+			improvIndex += 1;
 		}
 	}
 }
@@ -135,10 +154,12 @@ var isImprov = true;
 Tone.Transport.scheduleRepeat(function () {
 	if (isImprov) { // alternate between original and improvised versions
 		fillPart(headData);
+		console.log("playing head...");
 		isImprov = false;
 	} else {
 		genImprov();
 		fillPart(improvData);
+		console.log("playing improv...");
 		isImprov = true;
 	}
 	//console.log(Tone.Transport.position);
