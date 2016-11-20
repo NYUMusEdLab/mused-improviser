@@ -70,7 +70,7 @@ function fillPart(data) {
 		var pos = data[i].onset * 2;
 		var time = Math.floor(pos/16) + ":" + Math.floor(pos/4)%4 + ":" + pos%4;
 		var pitch = Tone.Frequency(data[i].pitch, "midi").eval();
-		var vel = Math.random() / 3 * 2 + 0.3;
+		var vel = Math.random() / 6 * 2 + 0.6;
 		var len = data[i].dur;
 		//console.log(i);
 		// //console.log([time, pitch, dur, vel, pos]);
@@ -100,7 +100,7 @@ function genImprov() {
 		var onset2 = 0;
 		// decide to insert notes by dividing 1 into 2?
 		if (i < (headData.length - 1) && (headData[i].onset < 32) &&
-		 	((headData[i + 1].onset - headData[i].onset) >= 2) && (Math.random() < 0.5)) { //%2 === 0
+		 	((headData[i + 1].onset - headData[i].onset) >= 2) && (Math.random() < 0.3)) { //%2 === 0
 		 		console.log("dividing", i);
 				divide = true;
 				dur1 = dur1 / 2;
@@ -116,7 +116,7 @@ function genImprov() {
 		}
 		var newPitch = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
 		if (improvData.length > 0 && improvData[improvIndex - 1].pitch === newPitch) { // avoid some duplicates
-			console.log("duplicate pitch", i);
+			console.log("avoiding duplicate pitch", i);
 			newPitch = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
 		}
 		// add note(s) - perhaps leave one out from time to time
@@ -150,6 +150,18 @@ function quantize (val, scale) {
 	return val;
 }
 
+// perscussion
+var osc = new Tone.Oscillator('C2').toMaster();
+var noiseSynth = new Tone.NoiseSynth().toMaster();
+var percCnt = 0;
+
+var percLoop = new Tone.Loop(function(time){
+	noiseSynth.triggerAttackRelease("8n", time, 0.4);
+	if (percCnt%4 === 0) { osc.start(time).stop(time + 0.01) };
+	percCnt += 1;
+}, '8n');
+
+// shcedule the part repeatedly
 Tone.Transport.bpm.value = 124;
 Tone.Transport.timeSignature = [4, 4];
 Tone.Transport.swingSubdivision = "8n";
@@ -176,6 +188,7 @@ Tone.Transport.scheduleRepeat(function () {
 	//console.log(Tone.Transport.position);
 	if (firstTime) {
 		setTimeout(function(){part.start()}, 1);
+		setTimeout(function(){percLoop.start()}, 1);
 		firstTime = false;
 	}
 }, "4m");
