@@ -20,7 +20,7 @@ var headData = [
 	{onset: 23, pitch: 64, dur: 9}
 ];
 
-// test data
+//test data
 // var headData = [
 // 	{onset: 0, pitch: 60, dur: 1},
 // 	{onset: 1, pitch: 62, dur: 1},
@@ -122,8 +122,9 @@ function quantize (val, scale) {
 
 Tone.Transport.bpm.value = 124;
 Tone.Transport.timeSignature = [4, 4];
-Tone.Transport.swing = 0.6;
-Tone.Transport.start();
+Tone.Transport.swingSubdivision = "8n";
+Tone.Transport.swing = 0.5;
+Tone.Transport.start("+1");
 part.loop = true;
 part.loopStart = 0;
 part.loopEnd = "4:0:0";
