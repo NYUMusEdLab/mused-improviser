@@ -94,18 +94,18 @@ function genImprov() {
 	improvData = []; // start empty
 	var improvIndex = 0;
 	for (var i=0; i<headData.length; i++) {
-		// decide to insert notes by dividing 1 into 2?
 		var divide = false;
 		var dur1 = headData[i].dur;
 		var dur2 = 0;
 		var onset2 = 0;
+		// decide to insert notes by dividing 1 into 2?
 		if (i < (headData.length - 1) && (headData[i].onset < 32) &&
-		 	((headData[i + 1].onset - headData[i].onset)%2 === 0) && (Math.random() < 0.5)) {
+		 	((headData[i + 1].onset - headData[i].onset) >= 2) && (Math.random() < 0.5)) { //%2 === 0
 		 		console.log("dividing", i);
 				divide = true;
 				dur1 = dur1 / 2;
 				dur2 = dur1;
-				onset2 = headData[i].onset + (headData[i + 1].onset - headData[i].onset) / 2;
+				onset2 = Math.round(headData[i].onset + (headData[i + 1].onset - headData[i].onset) / 2);
 		}
 		// calculate the next pitch
 		var pitchSet = [];
@@ -123,9 +123,20 @@ function genImprov() {
 		if (headData[i].onset % 4 === 0 || headData[i].dur > 3 || Math.random() < 0.8) {
 			improvData.push({onset: headData[i].onset, pitch: newPitch, dur: dur1});
 			improvIndex += 1;
+		} else { // add duration on to prev note
+			console.log("dropped a note", i);
+			if (improvIndex > 1) {
+					improvData[improvIndex - 2].dur =
+							improvData[improvIndex - 2].dur + Math.round(headData[i].dur * Math.random());
+			}
 		}
 		if (divide) {
-			var newPitch2 = quantize(headData[i].pitch + Math.round(Math.random() * 4 - 2), pitchSet);
+			var avePitch = headData[i].pitch;
+			 if (i < headData.length - 1) {
+				avePitch = Math.round((headData[i].pitch + headData[i+1].pitch) / 2.0);
+			 }
+			var newPitch2 = quantize(avePitch + Math.min(6, Math.round(Math.max(-6, gauss()))), pitchSet);
+			//console.log(gauss());
 			improvData.push({onset: onset2, pitch: newPitch2, dur: dur2});
 			improvIndex += 1;
 		}
@@ -154,12 +165,12 @@ var isImprov = true;
 Tone.Transport.scheduleRepeat(function () {
 	if (isImprov) { // alternate between original and improvised versions
 		fillPart(headData);
-		console.log("playing head...");
+		console.log("*** playing head...");
 		isImprov = false;
 	} else {
 		genImprov();
 		fillPart(improvData);
-		console.log("playing improv...");
+		console.log("*** playing improv...");
 		isImprov = true;
 	}
 	//console.log(Tone.Transport.position);
@@ -168,3 +179,42 @@ Tone.Transport.scheduleRepeat(function () {
 		firstTime = false;
 	}
 }, "4m");
+
+// helper functions
+// returns a gaussian random function with the given mean and stdev.
+function gaussian(mean, stdev) {
+    var y2;
+    var use_last = false;
+    return function() {
+        var y1;
+        if(use_last) {
+           y1 = y2;
+           use_last = false;
+        }
+        else {
+            var x1, x2, w;
+            do {
+                 x1 = 2.0 * Math.random() - 1.0;
+                 x2 = 2.0 * Math.random() - 1.0;
+                 w  = x1 * x1 + x2 * x2;
+            } while( w >= 1.0);
+            w = Math.sqrt((-2.0 * Math.log(w))/w);
+            y1 = x1 * w;
+            y2 = x2 * w;
+            use_last = true;
+       }
+
+       var retval = mean + stdev * y1;
+       if(retval > 0)
+           return retval;
+       return -retval;
+   }
+}
+
+// make a standard gaussian variable.
+var gauss = gaussian(-2, 2);
+
+// make a bunch of standard variates
+// for(i=0; i<2000; i++) {
+//    console.log(standard());
+// }
