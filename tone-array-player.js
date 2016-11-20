@@ -64,7 +64,7 @@ function genImprov() {
 		var onset2 = 0;
 		// decide to insert notes by dividing 1 into 2?
 		if (i < (headData.length - 1) && (headData[i].onset < 32) &&
-		 	((headData[i + 1].onset - headData[i].onset) >= 2) && (Math.random() < 0.3)) { //%2 === 0
+		 	((headData[i + 1].onset - headData[i].onset) >= 2) && (Math.random() < 0.3)) { //higer values -> busier
 		 		console.log("dividing", i);
 				divide = true;
 				dur1 = dur1 / 2;
@@ -94,6 +94,7 @@ function genImprov() {
 							improvData[improvIndex - 2].dur + Math.round(headData[i].dur * Math.random());
 			}
 		}
+		// split one note into two if the decision has been made
 		if (divide) {
 			var avePitch = headData[i].pitch;
 			 if (i < headData.length - 1) {
@@ -120,7 +121,7 @@ var noiseSynth = new Tone.NoiseSynth().toMaster();
 var percCnt = 0;
 
 var percLoop = new Tone.Loop(function(time){
-	noiseSynth.triggerAttackRelease("8n", time, 0.4);
+	noiseSynth.triggerAttackRelease("8n", time, Math.random() / 4 + 0.2);
 	if (percCnt%4 === 0) { osc.start(time).stop(time + 0.01) };
 	percCnt += 1;
 }, '8n');
