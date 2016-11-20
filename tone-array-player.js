@@ -20,42 +20,6 @@ var headData = [
 	{onset: 23, pitch: 64, dur: 9}
 ];
 
-//test data
-// var headData = [
-// 	{onset: 0, pitch: 60, dur: 1},
-// 	{onset: 1, pitch: 62, dur: 1},
-// 	{onset: 2, pitch: 60, dur: 1},
-// 	{onset: 3, pitch: 62, dur: 1},
-// 	{onset: 4, pitch: 60, dur: 1},
-// 	{onset: 5, pitch: 62, dur: 1},
-// 	{onset: 6, pitch: 60, dur: 1},
-// 	{onset: 7, pitch: 62, dur: 1},
-// 	{onset: 8, pitch: 60, dur: 1},
-// 	{onset: 9, pitch: 62, dur: 1},
-// 	{onset: 10, pitch: 60, dur: 1},
-// 	{onset: 11, pitch: 62, dur: 1},
-// 	{onset: 12, pitch: 60, dur: 1},
-// 	{onset: 13, pitch: 62, dur: 1},
-// 	{onset: 14, pitch: 60, dur: 1},
-// 	{onset: 15, pitch: 62, dur: 1},
-// 	{onset: 16, pitch: 60, dur: 1},
-// 	{onset: 17, pitch: 62, dur: 1},
-// 	{onset: 18, pitch: 60, dur: 1},
-// 	{onset: 19, pitch: 62, dur: 1},
-// 	{onset: 20, pitch: 60, dur: 1},
-// 	{onset: 21, pitch: 62, dur: 1},
-// 	{onset: 22, pitch: 60, dur: 1},
-// 	{onset: 23, pitch: 62, dur: 1},
-// 	{onset: 24, pitch: 60, dur: 1},
-// 	{onset: 25, pitch: 62, dur: 1},
-// 	{onset: 26, pitch: 60, dur: 1},
-// 	{onset: 27, pitch: 62, dur: 1},
-// 	{onset: 28, pitch: 60, dur: 1},
-// 	{onset: 29, pitch: 62, dur: 1},
-// 	{onset: 30, pitch: 60, dur: 1},
-// 	{onset: 31, pitch: 62, dur: 1},
-// ];
-
 var improvData = [];
 var perfData = [];
 
