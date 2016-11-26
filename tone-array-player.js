@@ -316,9 +316,4 @@ function gaussian(mean, stdev) {
 }
 
 // make a standard gaussian variable.
-var gauss = gaussian(-3, 3);
-
-// make a bunch of standard variates
-// for(i=0; i<2000; i++) {
-//    console.log(standard());
-// }
+var gauss = gaussian(0, 2);
